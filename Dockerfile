@@ -11,8 +11,7 @@ RUN npm run build
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
-ENV DATA_DIR=/data
-RUN mkdir -p /data
+ENV DATA_DIR=/tmp/berry-data
 
 EXPOSE 3000
-CMD ["sh", "-c", "if [ ! -f \"$DATA_DIR/store.json\" ]; then npm run seed; fi; npm run start"]
+CMD ["sh", "-c", "mkdir -p \"$DATA_DIR\"; if [ ! -f \"$DATA_DIR/store.json\" ]; then npm run seed; fi; npm run start"]

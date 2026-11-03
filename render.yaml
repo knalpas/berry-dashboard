@@ -12,8 +12,4 @@ services:
       - key: BERRY_AGENT_PASSWORD
         value: BerryAgent2026!
       - key: DATA_DIR
-        value: /data
-    disk:
-      name: berry-data
-      mountPath: /data
-      sizeGB: 1
+        value: /tmp/berry-data

@@ -10,11 +10,11 @@ function password(): string {
 }
 
 async function main() {
-  const dataDir = path.join(process.cwd(), "data");
+  const dataDir = process.env.DATA_DIR || path.join(process.cwd(), "data");
   await fs.mkdir(dataDir, { recursive: true });
 
-  const adminPass = password();
-  const agentPass = password();
+  const adminPass = process.env.BERRY_ADMIN_PASSWORD || password();
+  const agentPass = process.env.BERRY_AGENT_PASSWORD || password();
 
   const adminId = "user-admin-karl";
   const agentId = "user-agent-berry";
@@ -83,6 +83,7 @@ Change passwords after first login by re-seeding or editing data/store.json hash
 
   await fs.writeFile(path.join(dataDir, "CREDENTIALS.txt"), creds, "utf8");
   console.log(creds);
+  console.log(`Data directory: ${dataDir}`);
 }
 
 main().catch((err) => {

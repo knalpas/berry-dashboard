@@ -2,7 +2,11 @@ import { promises as fs } from "fs";
 import path from "path";
 import { Database, UserData } from "./types";
 
-const DATA_DIR = path.join(process.cwd(), "data");
+const DATA_DIR =
+  process.env.DATA_DIR ||
+  (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME
+    ? path.join("/tmp", "berry-data")
+    : path.join(process.cwd(), "data"));
 const DB_PATH = path.join(DATA_DIR, "store.json");
 
 async function ensureDir() {

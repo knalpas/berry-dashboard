@@ -35,3 +35,20 @@ npm run dev
 Open http://localhost:3000 and sign in with credentials from `data/CREDENTIALS.txt`.
 
 Optional: set `BERRY_SESSION_SECRET` in production.
+
+## Deploy (phone-friendly)
+
+This is a Next.js server app — **GitHub Pages cannot host it**. Use:
+
+### Render (recommended free host)
+
+1. Open https://dashboard.render.com/select-repo?type=web on your phone  
+2. Connect GitHub and pick `knalpas/berry-dashboard`  
+3. Runtime: **Docker** (uses the included `Dockerfile` / `render.yaml`)  
+4. After deploy, open the `*.onrender.com` URL  
+
+Optional env vars: `BERRY_ADMIN_PASSWORD`, `BERRY_AGENT_PASSWORD`, `BERRY_SESSION_SECRET`.
+
+### Vercel
+
+Import the GitHub repo at https://vercel.com/new — note file storage is ephemeral on the free tier (data can reset).

@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: berry-dashboard
+    runtime: docker
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: BERRY_SESSION_SECRET
+        generateValue: true
+      - key: BERRY_ADMIN_PASSWORD
+        value: BerryAdmin2026!
+      - key: BERRY_AGENT_PASSWORD
+        value: BerryAgent2026!
+      - key: DATA_DIR
+        value: /data
+    disk:
+      name: berry-data
+      mountPath: /data
+      sizeGB: 1

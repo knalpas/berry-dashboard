@@ -1,28 +1,17 @@
 # Berry Dashboard
 
-Personal admin workspace for career moves and life admin. Berry logo, mobile-friendly tabs, and **per-user private data** stored on the server (not shared across accounts).
+Your money and life admin in one place. Mobile-friendly, with **per-user private data** stored on the server.
 
-## Tabs
+## Two tabs
 
-- **Home** — snapshot, scratchpad, CV advice
-- **Jobs** — CV upload/profile, public job APIs ranked by relevance, CV tips, Apply Assist, people targeting
-- **Admin** — tax / health insurance / pension / investments / admin checklist with advice + GOV.UK / MoneyHelper links
-- **Network** — hiring contacts & outreach drafts
-- **Playbook** — how to use Berry safely
+- **Money** — this month at a glance (money in, spent, saved, left) with a bar showing where it went; quick transaction entry; accounts and net worth with month-on-month change; monthly bills with next due dates; category budgets; savings goals.
+- **Admin** — dated life-admin to-dos (tax, pension, insurance, documents…) grouped into overdue / next 30 days / later. Repeating tasks roll forward when you tick them. UK tax-year trackers for the ISA and pension allowances, and a notes pad. New accounts start with UK starter tasks linking to GOV.UK and MoneyHelper.
 
-## Auth & personal data
+Data from the older five-tab version is migrated automatically: notes and completed checklist items carry over. Old job/CV/contact data is left untouched in the store.
 
-This agent run had **no GitHub repository linked**, so auth is local:
+## Accounts
 
-1. `npm run seed` creates two accounts and writes passwords to `data/CREDENTIALS.txt`
-2. Each login gets its own CV, applications, contacts, and finance list in `data/store.json`
-3. Karl’s account is **admin**; the Berry Agent account is a separate user
-
-For GitHub later: keep `data/` gitignored (already configured), deploy your own instance, and optionally move the JSON store to a database.
-
-## Job sources
-
-Uses public APIs (**Remotive**, **Arbeitnow**). LinkedIn/Indeed are **not scraped** (against their terms). Apply Assist drafts a cover letter and tracks status; you submit on the employer’s official page.
+`npm run seed` creates two logins and writes their passwords to `data/CREDENTIALS.txt` (set `BERRY_ADMIN_PASSWORD` / `BERRY_AGENT_PASSWORD` to choose them). Re-running seed **wipes** `data/store.json`.
 
 ## Run locally
 
@@ -32,23 +21,20 @@ npm run seed
 npm run dev
 ```
 
-Open http://localhost:3000 and sign in with credentials from `data/CREDENTIALS.txt`.
+Open http://localhost:3000 and sign in with the credentials from `data/CREDENTIALS.txt`.
 
-Optional: set `BERRY_SESSION_SECRET` in production.
+## Deploy
 
-## Deploy (phone-friendly)
+This is a Next.js server app, so GitHub Pages can't host it.
 
-This is a Next.js server app — **GitHub Pages cannot host it**. Use:
+### Render
 
-### Render (recommended free host)
+1. Open https://dashboard.render.com/select-repo?type=web
+2. Pick `knalpas/berry-dashboard`, runtime **Docker** (uses `Dockerfile` / `render.yaml`)
+3. Set `BERRY_ADMIN_PASSWORD` and `BERRY_AGENT_PASSWORD` in the dashboard
 
-1. Open https://dashboard.render.com/select-repo?type=web on your phone  
-2. Connect GitHub and pick `knalpas/berry-dashboard`  
-3. Runtime: **Docker** (uses the included `Dockerfile` / `render.yaml`)  
-4. After deploy, open the `*.onrender.com` URL  
-
-Optional env vars: `BERRY_ADMIN_PASSWORD`, `BERRY_AGENT_PASSWORD`, `BERRY_SESSION_SECRET`.
+On the free tier, data lives in `/tmp` and is **lost whenever the service restarts or redeploys**. For anything you want to keep, add a persistent disk (paid) or move the store to a database.
 
 ### Vercel
 
-Import the GitHub repo at https://vercel.com/new — note file storage is ephemeral on the free tier (data can reset).
+Import at https://vercel.com/new — file storage is ephemeral there too.

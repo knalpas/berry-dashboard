@@ -2,8 +2,8 @@ import { promises as fs } from "fs";
 import path from "path";
 import bcrypt from "bcryptjs";
 import { randomBytes } from "crypto";
-import { defaultFinanceItems } from "../src/lib/finance";
 import { Database } from "../src/lib/types";
+import { emptyUserData } from "../src/lib/db";
 
 function password(): string {
   return randomBytes(9).toString("base64url");
@@ -39,31 +39,15 @@ async function main() {
       },
     ],
     userData: {
-      [adminId]: {
-        userId: adminId,
-        applications: [],
-        contacts: [],
-        finance: defaultFinanceItems(),
-        savedJobIds: [],
-        notes: "Welcome to Berry Dashboard — your personal admin workspace.",
-        updatedAt: new Date().toISOString(),
-      },
-      [agentId]: {
-        userId: agentId,
-        applications: [],
-        contacts: [],
-        finance: defaultFinanceItems(),
-        savedJobIds: [],
-        notes: "Agent workspace (separate data from admin).",
-        updatedAt: new Date().toISOString(),
-      },
+      [adminId]: emptyUserData(adminId),
+      [agentId]: emptyUserData(agentId),
     },
   };
 
   await fs.writeFile(
     path.join(dataDir, "store.json"),
     JSON.stringify(db, null, 2),
-    "utf8"
+    "utf8",
   );
 
   const creds = `# Berry Dashboard credentials
@@ -77,7 +61,7 @@ Password: ${adminPass}
 Email: berry@agent.local
 Password: ${agentPass}
 
-Each account has isolated CV, jobs, applications, contacts, and finance lists.
+Each account has its own accounts, transactions, bills, goals and admin tasks.
 Change passwords after first login by re-seeding or editing data/store.json hashes.
 `;
 

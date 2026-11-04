@@ -22,8 +22,8 @@ export function AppClient() {
 
   if (!ready) {
     return (
-      <main className="boot-shell">
-        <p className="muted">Opening Berry…</p>
+      <main className="boot">
+        <div className="loading" aria-label="Loading" />
       </main>
     );
   }

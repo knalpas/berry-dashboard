@@ -16,92 +16,100 @@ export type SessionUser = {
   role: Role;
 };
 
-export type CvProfile = {
-  rawText: string;
-  fileName?: string;
+/* ---------- Money ---------- */
+
+export type AccountKind =
+  | "current"
+  | "savings"
+  | "isa"
+  | "investment"
+  | "pension"
+  | "credit"
+  | "loan";
+
+export type Account = {
+  id: string;
+  name: string;
+  kind: AccountKind;
+  /** Always entered as a positive number. Credit / loan balances are what you owe. */
+  balance: number;
+  /** Month-end style snapshots keyed by YYYY-MM, used for net-worth change. */
+  history: Record<string, number>;
   updatedAt: string;
-  headline?: string;
-  summary?: string;
-  skills: string[];
-  titles: string[];
-  yearsExperience?: number;
-  locations: string[];
-  keywords: string[];
 };
 
-export type JobSource = "remotive" | "arbeitnow" | "manual";
-
-export type JobListing = {
+export type Transaction = {
   id: string;
-  source: JobSource;
-  title: string;
-  company: string;
-  location: string;
-  url: string;
+  date: string; // YYYY-MM-DD
   description: string;
-  tags: string[];
-  salary?: string;
-  postedAt?: string;
-  relevance?: number;
-  matchReasons?: string[];
-};
-
-export type ApplicationStatus =
-  | "saved"
-  | "drafted"
-  | "applied"
-  | "interview"
-  | "offer"
-  | "rejected";
-
-export type JobApplication = {
-  id: string;
-  jobId: string;
-  jobTitle: string;
-  company: string;
-  url: string;
-  status: ApplicationStatus;
-  coverLetter?: string;
-  notes?: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type Contact = {
-  id: string;
-  company: string;
-  roleHint: string;
-  name?: string;
-  email?: string;
-  linkedinUrl?: string;
-  whyInteresting: string;
-  outreachDraft?: string;
-  status: "to_find" | "identified" | "reached_out" | "replied";
-  createdAt: string;
-};
-
-export type FinanceItemStatus = "todo" | "doing" | "done" | "n_a";
-
-export type FinanceItem = {
-  id: string;
+  /** Positive = money in, negative = money out. */
+  amount: number;
   category: string;
-  title: string;
-  description: string;
-  advice: string;
-  references: { label: string; url: string }[];
-  status: FinanceItemStatus;
-  notes?: string;
-  dueHint?: string;
 };
 
-export type UserData = {
-  userId: string;
-  cv?: CvProfile;
-  applications: JobApplication[];
-  contacts: Contact[];
-  finance: FinanceItem[];
-  savedJobIds: string[];
+export type Bill = {
+  id: string;
+  name: string;
+  amount: number;
+  dayOfMonth: number; // 1–31
+  category: string;
+};
+
+export type Goal = {
+  id: string;
+  name: string;
+  target: number;
+  saved: number;
+  deadline?: string; // YYYY-MM-DD
+};
+
+/* ---------- Admin ---------- */
+
+export type AdminArea =
+  | "Tax"
+  | "Pension"
+  | "Investments"
+  | "Insurance"
+  | "Home"
+  | "Documents"
+  | "Health"
+  | "Other";
+
+export type Repeat = "none" | "monthly" | "yearly";
+
+export type AdminTask = {
+  id: string;
+  title: string;
+  area: AdminArea;
+  dueDate?: string; // YYYY-MM-DD
+  repeat: Repeat;
+  done: boolean;
+  lastDoneAt?: string;
+  notes?: string;
+  advice?: string;
+  references?: { label: string; url: string }[];
+};
+
+export type Settings = {
+  /** Monthly spending limit per category. */
+  budgets: Record<string, number>;
+  /** Manually tracked tax-year allowances (resets are manual). */
+  isaUsed: number;
+  pensionUsed: number;
   notes: string;
+};
+
+export type Workspace = {
+  accounts: Account[];
+  transactions: Transaction[];
+  bills: Bill[];
+  goals: Goal[];
+  tasks: AdminTask[];
+  settings: Settings;
+};
+
+export type UserData = Workspace & {
+  userId: string;
   updatedAt: string;
 };
 
@@ -109,3 +117,10 @@ export type Database = {
   users: User[];
   userData: Record<string, UserData>;
 };
+
+export type Collection =
+  | "accounts"
+  | "transactions"
+  | "bills"
+  | "goals"
+  | "tasks";

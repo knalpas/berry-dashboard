@@ -7,9 +7,10 @@ services:
     envVars:
       - key: BERRY_SESSION_SECRET
         generateValue: true
+      # Set these in the Render dashboard; never commit real passwords.
       - key: BERRY_ADMIN_PASSWORD
-        value: BerryAdmin2026!
+        sync: false
       - key: BERRY_AGENT_PASSWORD
-        value: BerryAgent2026!
+        sync: false
       - key: DATA_DIR
         value: /tmp/berry-data

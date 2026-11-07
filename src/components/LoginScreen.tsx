@@ -4,6 +4,17 @@ import { FormEvent, useState } from "react";
 import { BerryLogo } from "./BerryLogo";
 import { SessionUser } from "@/lib/types";
 
+/* Decorative only: the same spending bar the Money tab draws, with made-up proportions. */
+const FLOW = [
+  { cls: "seg-0", grow: 38 },
+  { cls: "seg-1", grow: 7 },
+  { cls: "seg-2", grow: 9 },
+  { cls: "seg-3", grow: 6 },
+  { cls: "seg-4", grow: 4 },
+  { cls: "seg-saved", grow: 14 },
+  { cls: "seg-left", grow: 22 },
+];
+
 export function LoginScreen({
   onLogin,
 }: {
@@ -47,12 +58,34 @@ export function LoginScreen({
 
   return (
     <main className="login">
-      <section className="login-card">
-        <BerryLogo size={56} />
-        <h1 className="login-title">Berry</h1>
-        <p className="login-sub">Your money and life admin, in one place.</p>
+      <section className="login-hero">
+        <div className="login-brand">
+          <BerryLogo size={40} />
+          <span>Berry</span>
+        </div>
+        <div className="login-pitch">
+          <h1 className="login-headline">
+            Where your money went, and what&apos;s due next.
+          </h1>
+          <div className="login-flow" aria-hidden>
+            {FLOW.map((s, i) => (
+              <span
+                key={i}
+                className={`flow-seg ${s.cls}`}
+                style={{ flexGrow: s.grow, animationDelay: `${i * 60}ms` }}
+              />
+            ))}
+          </div>
+          <p className="login-sub">
+            Spending, bills, budgets and goals on one side. Tax, pension and
+            life admin on the other.
+          </p>
+        </div>
+      </section>
 
+      <section className="login-panel">
         <form onSubmit={handleSubmit} className="login-form">
+          <h2 className="login-title">Sign in</h2>
           <label className="field wide">
             <span className="field-label">Email</span>
             <input
@@ -70,7 +103,6 @@ export function LoginScreen({
               type="password"
               autoComplete="current-password"
               required
-              autoFocus
             />
           </label>
           {error ? <p className="form-error">{error}</p> : null}
